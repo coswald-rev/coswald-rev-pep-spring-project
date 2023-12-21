@@ -103,6 +103,16 @@ public class MessageService {
     }
 
     /**
+     * Find all the messages made by a given account
+     * 
+     * @param id the id of the account to look for
+     * @return the messages created by the account
+     */
+    public List<Message> getMessagesByAccountId(Integer id) {
+        return messageRepository.findAllByPostedBy(id);
+    }
+
+    /**
      * Validate message_text based on Message requirements.
      * Requirements:
      * - message_text is not blank
