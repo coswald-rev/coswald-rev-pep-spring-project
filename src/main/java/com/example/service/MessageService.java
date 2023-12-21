@@ -54,6 +54,16 @@ public class MessageService {
     }
 
     /**
+     * Find a message by id 
+     * 
+     * @param id the id of the message
+     * @return an empty if not found, present message if exists 
+     */
+    public Optional<Message> getMessageById(Integer id) {
+        return messageRepository.findById(id);
+    }
+
+    /**
      * Validate message_text based on Message requirements.
      * Requirements:
      * - message_text is not blank
