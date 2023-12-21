@@ -64,6 +64,22 @@ public class MessageService {
     }
 
     /**
+     * Attempt to delete a message by id
+     * 
+     * @param id the id of the message to delete
+     * @return true if the message exists and was deleted, false if nothing happened
+     */
+    public boolean deleteMessageById(Integer id) {
+        Optional<Message> existingMessage = messageRepository.findById(id);
+        if (existingMessage.isPresent()) {
+            messageRepository.deleteById(id);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Validate message_text based on Message requirements.
      * Requirements:
      * - message_text is not blank
