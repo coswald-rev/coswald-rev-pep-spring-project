@@ -4,12 +4,14 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.entity.Account;
 import com.example.exception.AccountAlreadyExistsException;
 import com.example.exception.AccountException;
 import com.example.repository.AccountRepository;
 
+@Transactional(rollbackFor = AccountException.class)
 @Service
 public class AccountService {
 
@@ -27,11 +29,12 @@ public class AccountService {
      * - Password is at least 4 characters long.
      * - Username is unique within our database.
      * 
-     * @param account
-     * @return
-     * @throws Account
+     * @param account the account to create
+     * @return the newly created account upon success
+     * @throws AccountException if a validation check failed
+     * @throws AccountAlreadyExistsException if the account username already exists
      */
-    public Account createAccount(Account account) throws AccountException {
+    public Account createAccount(Account account) throws AccountException, AccountAlreadyExistsException {
         if (account.getUsername().isBlank()) {
             throw new AccountException("Username cannot be blank");
         }
