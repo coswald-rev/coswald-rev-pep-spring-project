@@ -80,6 +80,29 @@ public class MessageService {
     }
 
     /**
+     * Attempt to update a message by id
+     * 
+     * @param message_text the message text to update
+     * @param message_id the id of the message to update
+     * @return empty if the message doesn't exist or a validation check failed, present message if the update was successful
+     */
+    public Optional<Message> updateMessageById(String message_text, Integer message_id) {
+        Optional<Message> existingMessage = messageRepository.findById(message_id);
+        if (existingMessage.isEmpty()) {
+            return Optional.empty();
+        }
+
+        if (!messageTextIsValid(message_text)) {
+            return Optional.empty();
+        }
+
+        Message message = existingMessage.get();
+        message.setMessage_text(message_text);
+
+        return Optional.of(messageRepository.save(message));
+    }
+
+    /**
      * Validate message_text based on Message requirements.
      * Requirements:
      * - message_text is not blank

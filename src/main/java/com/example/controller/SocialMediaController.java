@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -150,5 +151,24 @@ public class SocialMediaController {
         return ResponseEntity.status(HttpStatus.OK).body(
             messageService.deleteMessageById(message_id) ? 1 : null
         );
+    }
+
+    /**
+     * PATCH /messages/{message_id}
+     * Update a message_text by the message_id
+     * 
+     * @param message the body containing the message_text
+     * @param message_id the id of the message to update
+     * @return
+     */
+    @PatchMapping("/messages/{message_id}")
+    @ResponseBody
+    public ResponseEntity<Integer> patchMessageById(@RequestBody Message message, @PathVariable Integer message_id) {
+        Optional<Message> updatedMessage = messageService.updateMessageById(message.getMessage_text(), message_id);
+        if (updatedMessage.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(1);
     }
 }
