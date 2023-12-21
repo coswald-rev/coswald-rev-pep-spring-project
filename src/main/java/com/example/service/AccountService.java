@@ -2,6 +2,8 @@ package com.example.service;
 
 import java.util.Optional;
 
+import javax.swing.text.html.Option;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,5 +51,26 @@ public class AccountService {
         }
 
         return accountRepository.save(account);
+    }
+
+    /**
+     * Attempt to authenticate against an existing account.
+     * Requirements:
+     * - Account with username exists
+     * - Provided passwords fully match
+     * 
+     * @param account the account to authenticate
+     * @return an empty if the authnetication failed, a present account if the authentication was successful
+     */
+    public Optional<Account> authenticate(Account account) {
+        Optional<Account> existingAccount = accountRepository.findAccountByUsername(account.getUsername());
+
+        if (existingAccount.isEmpty()) return Optional.empty();
+
+        if (!existingAccount.get().getPassword().equals(account.getPassword())) {
+            return Optional.empty();
+        }
+
+        return existingAccount;
     }
 }

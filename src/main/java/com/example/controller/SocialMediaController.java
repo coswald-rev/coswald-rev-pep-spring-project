@@ -1,5 +1,7 @@
 package com.example.controller;
 
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,4 +60,14 @@ public class SocialMediaController {
         return ResponseEntity.status(200).body(account);
     }
 
+    @PostMapping("/login")
+    @ResponseBody
+    public ResponseEntity<Account> login(@RequestBody Account account) {
+        Optional<Account> authenticatedAccount = accountService.authenticate(account);
+        if (authenticatedAccount.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(authenticatedAccount.get());
+    }
 }
